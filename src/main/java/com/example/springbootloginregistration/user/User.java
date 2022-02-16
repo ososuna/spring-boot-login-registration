@@ -24,7 +24,7 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 @NoArgsConstructor
-@Entity
+@Entity(name = "app_user")
 public class User implements UserDetails {
 
   @Id
@@ -38,19 +38,19 @@ public class User implements UserDetails {
     generator = "user_sequence"
   )
   private Long id;
-  private String name;
+  private String fullName;
   private String username;
   private String email;
   private String password;
   @Enumerated(EnumType.STRING)
-  private UserRole appUserRole;
+  private UserRole userRole;
   private Boolean locked;
   private Boolean enabled;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
       SimpleGrantedAuthority authority =
-              new SimpleGrantedAuthority(appUserRole.name());
+              new SimpleGrantedAuthority(userRole.name());
       return Collections.singletonList(authority);
   }
 
