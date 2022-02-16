@@ -38,7 +38,7 @@ public class User implements UserDetails {
     generator = "user_sequence"
   )
   private Long id;
-  private String fullName;
+  private String name;
   private String username;
   private String email;
   private String password;
