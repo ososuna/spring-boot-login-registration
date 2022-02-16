@@ -43,9 +43,9 @@ public class User implements UserDetails {
   private String email;
   private String password;
   @Enumerated(EnumType.STRING)
-  private UserRole userRole;
-  private Boolean locked;
-  private Boolean enabled;
+  private UserRole userRole = UserRole.USER;
+  private Boolean locked = false;
+  private Boolean enabled = false;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
