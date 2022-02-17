@@ -1,5 +1,11 @@
 package com.example.springbootloginregistration.user;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import com.example.springbootloginregistration.registration.token.ConfirmationToken;
+import com.example.springbootloginregistration.registration.token.ConfirmationTokenService;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +21,7 @@ public class UserService implements UserDetailsService {
   private final static String USER_NOT_FOUND_MSG = "User with email %s not found";
   private final UserRepository userRepository;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
+  private final ConfirmationTokenService confirmationTokenService;
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -37,9 +44,23 @@ public class UserService implements UserDetailsService {
 
     userRepository.save(user); 
 
-    // TODO: Send confirmation token
+    String token = UUID.randomUUID().toString();
 
-    return "works";
+    ConfirmationToken confirmationToken = new ConfirmationToken();
+    confirmationToken.setToken(token);
+    confirmationToken.setCreatedAt(LocalDateTime.now());
+    confirmationToken.setExpiredAt(LocalDateTime.now().plusMinutes(15));
+    confirmationToken.setUser(user);
+
+    confirmationTokenService.saveConfirmationToken(confirmationToken);
+
+    // TODO: Send email
+
+    return token;
+  }
+
+  public int enableUser(String email) {
+    return userRepository.enableUser(email);
   }
 
 }
